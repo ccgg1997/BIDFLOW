@@ -22,7 +22,7 @@ BIDFLOW utiliza Django Rest Framework para proporcionar una API básica que faci
 
 1. Clonar el repositorio:
    ```
-   git clone https://github.com/ccgg1997/BIDFLOW.git
+   git clone https://github.com/tu-usuario/bidflow-api.git
    cd bidflow-api
    ```
 

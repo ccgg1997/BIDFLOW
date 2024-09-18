@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: mi_basededatos
+      POSTGRES_USER: usuario
+      POSTGRES_PASSWORD: contrasenia
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+    ports:
+      - "9998:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U usuario -d mi_basededatos"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  web:
+    build: .
+    command: sh -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:9999"
+    volumes:
+      - .:/app
+    ports:
+      - "9999:9999"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://usuario:contrasenia@db:5432/mi_basededatos
+    networks:
+      - app-network
+    working_dir: /app/api 
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
