@@ -2,8 +2,6 @@ from datetime import timedelta
 
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from django.utils import timezone
-from rest_framework.authtoken.models import Token as DefaultToken
 
 
 class UserCustom(AbstractUser):

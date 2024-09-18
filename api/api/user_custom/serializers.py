@@ -1,9 +1,7 @@
 from rest_framework import serializers
 
 from api.user_custom.factory.user_factory import UserCustomFactory
-from api.user_custom.repository.user_custom_repository import (
-    UserCustomRepository,
-)
+from api.user_custom.repository.user_custom_repository import UserCustomRepository
 
 from .models import UserCustom
 
@@ -53,3 +51,8 @@ class UserCustomSerializer(serializers.ModelSerializer):
     @staticmethod
     def get_all():
         return UserCustomRepository().get_all()
+
+
+class LoginSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    password = serializers.CharField(write_only=True)
