@@ -17,14 +17,21 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import include, path
+from drf_spectacular.views import SpectacularSwaggerView, SpectacularAPIView
 from rest_framework.routers import DefaultRouter
 
 from api.user_custom import views
 
 router = DefaultRouter()
-router.register(r"user", views.UserCustomViewSet, basename="users")
+router.register(r"user", views.UserCustomViewSet, basename="user")
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("api/v1/schema/", SpectacularAPIView.as_view(), name="schema"),
     path("api/", include(router.urls)),
+    path(
+        "api/v1/doc/",
+        SpectacularSwaggerView.as_view(url_name="schema"),
+        name="swagger-ui",
+    ),
 ]

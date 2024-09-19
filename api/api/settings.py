@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     # External packages
     "rest_framework",
     "rest_framework.authtoken",
+    "drf_spectacular",
     # Local apps
     "api.user_custom",
 ]
@@ -150,4 +151,28 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticated",
     ],
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "BIDFLOW API",
+    "DESCRIPTION": """
+
+API **opensource** para subastas que conecta inversores con oportunidades de inversión.
+
+## Autenticación
+
+Para usar esta API, necesitas seguir estos pasos importantes:
+
+1. **Generar el Token:** Obtén tu token de autenticación mediante el endpoint de login.
+2. **Usar el Token:** En todas las solicitudes protegidas, incluye el token en el header así:
+
+```
+Authorization: Token <tu_token>
+```
+
+*Explora la documentación completa a continuación para más detalles sobre cada endpoint.*
+    """,
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
 }

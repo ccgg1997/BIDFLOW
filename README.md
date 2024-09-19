@@ -8,10 +8,12 @@ BIDFLOW utiliza Django Rest Framework para proporcionar una API básica que faci
 
 ## Se asumió:
 - Un inversor y un operador son roles excluyentes (se debe crear un perfil por separado para cada funcionalidad).
+- Zona horario UTC
+- Moneda: Dolares
 - Una operación tiene un monto inicial, pero puede tener cero o *n* inversores.
 - Una subasta tiene un campo denominado "monto restante" (para visualizar el valor disponible de la operación).
 - La creación de una inversión será rechazada si el porcentaje de interés esperado es mayor al porcentaje de la oferta.
-- La creación de una inversión será rechazada si el monto a invertir es mayor al disponible (se asume que el inversor puede no querer invertir el monto total disponible si no le resulta atractivo). 
+- La creación de una inversión será rechazada si el monto a invertir es mayor al disponible (se asume que el inversor desea invertir el monto total disponible en automatico si no le resulta atractivo). 
 
 ## Requisitos previos
 
@@ -31,7 +33,20 @@ BIDFLOW utiliza Django Rest Framework para proporcionar una API básica que faci
    docker compose up --build
    ```
 
-3. La API estará disponible en `http://localhost:9999`
+   Testing
+   ```
+   docker compose up --force-recreate tests
+
+   ```
+
+   Coverage
+   ```
+   docker compose up --force-recreate tests
+
+   ```
+
+3. La API estará disponible en `http://localhost:9999/api/v1/doc/`
+![alt text](imageSwagger.png)
 
 ## Uso
 
@@ -58,7 +73,7 @@ Para más detalles sobre los endpoints disponibles y sus parámetros, consulta l
 ## Diagrama de Relación
 
 A continuación se muestra un diagrama básico de la relación entre las principales entidades de BIDFLOW:
-![alt text](image.png)
+![alt text](imageDiagrama.png)
 
 
 Este diagrama muestra las relaciones básicas entre Subastas (AUCTION), Ofertas (BID) e Inversores (INVESTOR). Puedes expandir este diagrama para incluir más entidades y relaciones según sea necesario para tu proyecto.

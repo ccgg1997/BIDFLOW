@@ -34,7 +34,34 @@ services:
       DATABASE_URL: postgres://usuario:contrasenia@db:5432/mi_basededatos
     networks:
       - app-network
-    working_dir: /app/api 
+    working_dir: /app/api
+  
+  tests:
+    profiles: ["test"]
+    build: .
+    command: pytest
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+    working_dir: /app/api
+    networks:
+      - app-network
+    restart: 'no'
+
+  tests_cov:
+    profiles: ["test"]
+    build: .
+    command: pytest --cov
+    volumes:
+      - .:/app
+      - ./htmlcov:/app/api/htmlcov
+    networks:
+      - app-network
+    depends_on:
+      - db
+    working_dir: /app/api
+    restart: 'no'
 
 networks:
   app-network:
