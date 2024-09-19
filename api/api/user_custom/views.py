@@ -15,7 +15,8 @@ class UserCustomViewSet(viewsets.ViewSet):
         return [IsAuthenticated()]
 
     @extend_schema(
-        summary="Lista todos los usuarios", responses=UserCustomSerializer(many=True)
+        summary="Lista todos los usuarios",
+        responses=UserCustomSerializer(many=True),
     )
     def list(self, request):
         users = UserCustomSerializer.get_all()
@@ -25,7 +26,10 @@ class UserCustomViewSet(viewsets.ViewSet):
     @extend_schema(
         summary="Registro de nuevo usuario",
         request=UserCustomSerializer,
-        responses={201: UserCustomSerializer, 400: "Error en los datos enviados"},
+        responses={
+            201: UserCustomSerializer,
+            400: "Error en los datos enviados",
+        },
     )
     def create(self, request):
         serializer = UserCustomSerializer(data=request.data)
@@ -37,12 +41,17 @@ class UserCustomViewSet(viewsets.ViewSet):
                 {"token": token.key, "user": serializer.data},
                 status=status.HTTP_201_CREATED,
             )
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(
+            serializer.errors, status=status.HTTP_400_BAD_REQUEST
+        )
 
     @extend_schema(
         summary="Inicio de sesión",
-        description="Permite a un usuario iniciar sesión y obtener un token de autenticación.",
-        request=LoginSerializer,  # Ahora usas el nuevo serializer de login
+        description=(
+            "Permite a un usuario iniciar sesión y obtener un token de "
+            "autenticación."
+        ),
+        request=LoginSerializer,
         responses={
             200: UserCustomSerializer,
             400: "Credenciales inválidas",
@@ -53,7 +62,9 @@ class UserCustomViewSet(viewsets.ViewSet):
 
         serializer = LoginSerializer(data=request.data)
         if not serializer.is_valid():
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                serializer.errors, status=status.HTTP_400_BAD_REQUEST
+            )
 
         username = serializer.validated_data.get("username")
         password = serializer.validated_data.get("password")
@@ -61,9 +72,10 @@ class UserCustomViewSet(viewsets.ViewSet):
         user = UserCustomSerializer.user_auth(username, password)
         if user is None:
             return Response(
-                {"error": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST
+                {"error": "Invalid credentials"},
+                status=status.HTTP_400_BAD_REQUEST,
             )
-        token, created = Token.objects.get_or_create(user=user)
+        token, _ = Token.objects.get_or_create(user=user)
         user_serializer = UserCustomSerializer(user)
 
         return Response(

@@ -1,7 +1,9 @@
 from rest_framework import serializers
 
 from api.user_custom.factory.user_factory import UserCustomFactory
-from api.user_custom.repository.user_custom_repository import UserCustomRepository
+from api.user_custom.repository.user_custom_repository import (
+    UserCustomRepository,
+)
 
 from .models import UserCustom
 
@@ -33,18 +35,21 @@ class UserCustomSerializer(serializers.ModelSerializer):
                     validated_data["password"],
                 )
             else:
-                raise ValueError("Invalid rol. Options: inversor, operador")
+                raise ValueError(
+                    "Invalid rol. Options: inversor, operador"
+                )
         except Exception as e:
             raise serializers.ValidationError({"error": str(e)})
 
     @staticmethod
     def user_auth(username, password):
         try:
-            user = UserCustomRepository().get_by_username(username=username)
+            user = UserCustomRepository().get_by_username(
+                username=username
+            )
             if user is not None and user.check_password(password):
                 return user
             return None
-            return user
         except UserCustom.DoesNotExist:
             return None
 
