@@ -77,7 +77,7 @@ A continuación se muestra un diagrama básico de la relación entre las princip
 ![alt text](imageDiagrama.png)
 
 
-Este diagrama muestra las relaciones básicas entre Subastas (AUCTION), Ofertas (BID) e Inversores (INVESTOR). Puedes expandir este diagrama para incluir más entidades y relaciones según sea necesario para tu proyecto.
+Este diagrama muestra las relaciones básicas entre Subastas (AUCTION), Ofertas (BID) e Inversores (INVESTOR). Puedes expandir este diagrama para incluir más entidades y relaciones según sea necesario para complementar el proyecto (Toma la libertad de abrir un PR).
 
 
 ## Contribuir
