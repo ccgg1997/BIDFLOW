@@ -8,7 +8,8 @@ BIDFLOW utiliza Django Rest Framework para proporcionar una API básica que faci
 
 ## Se asumió:
 - Un inversor y un operador son roles excluyentes (se debe crear un perfil por separado para cada funcionalidad).
-- Zona horario UTC
+- No se pueden elimina operaciones (Queda como aspecto de mejora)
+- Zona horario> UTC
 - Moneda: Dolares
 - Una operación tiene un monto inicial, pero puede tener cero o *n* inversores.
 - Una subasta tiene un campo denominado "monto restante" (para visualizar el valor disponible de la operación).
@@ -57,9 +58,9 @@ Para utilizar la API, puedes hacer peticiones HTTP a los diferentes endpoints. A
    GET http://localhost:9999/api/auctions/
    ```
 
-2. Crear una nueva oferta:
+2. Crear una nueva Operacion:
    ```
-   POST http://localhost:9999/api/bids/
+   POST http://localhost:9999/api/operation/
    Content-Type: application/json
 
    {
