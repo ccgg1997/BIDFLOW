@@ -55,7 +55,7 @@ class OperationSerializer(serializers.ModelSerializer):
         try:
             request = self.context.get("request")
             user = UserCustom.objects.get(id=request.data["user"])
-            operation = OperationFactory.create_operation(
+            operation = OperationFactory.create_operation_and_auction(
                 amount=validated_data["amount"],
                 topic=validated_data["topic"],
                 description=validated_data["description"],
