@@ -17,13 +17,20 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import include, path
-from drf_spectacular.views import SpectacularSwaggerView, SpectacularAPIView
+from drf_spectacular.views import (
+    SpectacularAPIView,
+    SpectacularSwaggerView,
+)
 from rest_framework.routers import DefaultRouter
 
-from api.user_custom import views
+from api.operation import views as operation_views
+from api.user_custom import views as user_views
 
 router = DefaultRouter()
-router.register(r"user", views.UserCustomViewSet, basename="user")
+router.register(r"user", user_views.UserCustomViewSet, basename="User")
+router.register(
+    r"operation", operation_views.OperationViewSet, basename="Operation"
+)
 
 urlpatterns = [
     path("admin/", admin.site.urls),

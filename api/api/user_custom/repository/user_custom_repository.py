@@ -2,7 +2,6 @@ from api.user_custom.models import UserCustom
 
 
 class UserCustomRepository:
-    # Removed duplicate get_all method
 
     @staticmethod
     def create_user(username, dni, rol, email, password):

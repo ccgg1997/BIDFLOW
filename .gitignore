@@ -3,7 +3,8 @@ venv/
 **__pycache__/
 db.sqlite
 .env
-.coverage
-.vscode
+*.coverage
+*.vscode
 schema.yml
 htmlcov/
+*.toml
