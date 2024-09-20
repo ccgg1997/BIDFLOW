@@ -20,7 +20,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-w#ya!g5nbf+v0&9eul0er4lg4+1*ty0-ev(8e$5s!cro__^-^s"
+SECRET_KEY = (
+    "django-insecure-w#ya!g5nbf+v0&9eul0er4lg4+1*ty0-ev(8e$5s!cro__^-^s"
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -44,6 +46,7 @@ INSTALLED_APPS = [
     # Local apps
     "api.user_custom",
     "api.operation",
+    "api.auction",
 ]
 
 MIDDLEWARE = [
@@ -110,13 +113,22 @@ AUTH_PASSWORD_VALIDATORS = [
         ),
     },
     {
-        "NAME": ("django.contrib.auth.password_validation." "MinimumLengthValidator"),
+        "NAME": (
+            "django.contrib.auth.password_validation."
+            "MinimumLengthValidator"
+        ),
     },
     {
-        "NAME": ("django.contrib.auth.password_validation." "CommonPasswordValidator"),
+        "NAME": (
+            "django.contrib.auth.password_validation."
+            "CommonPasswordValidator"
+        ),
     },
     {
-        "NAME": ("django.contrib.auth.password_validation." "NumericPasswordValidator"),
+        "NAME": (
+            "django.contrib.auth.password_validation."
+            "NumericPasswordValidator"
+        ),
     },
 ]
 
