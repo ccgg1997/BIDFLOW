@@ -1,4 +1,4 @@
-from drf_spectacular.utils import extend_schema
+from drf_spectacular.utils import OpenApiResponse, extend_schema
 from rest_framework import status, viewsets
 from rest_framework.authtoken.models import Token
 from rest_framework.decorators import action
@@ -15,20 +15,11 @@ class UserCustomViewSet(viewsets.ViewSet):
         return [IsAuthenticated()]
 
     @extend_schema(
-        summary="Lista todos los usuarios",
-        responses=UserCustomSerializer(many=True),
-    )
-    def list(self, request):
-        users = UserCustomSerializer.get_all()
-        serializer = UserCustomSerializer(users, many=True)
-        return Response(serializer.data)
-
-    @extend_schema(
-        summary="Registro de nuevo usuario",
+        summary="Register a new user",
         request=UserCustomSerializer,
         responses={
             201: UserCustomSerializer,
-            400: "Error en los datos enviados",
+            400: "Error in the submitted data",
         },
     )
     def create(self, request):
@@ -46,15 +37,16 @@ class UserCustomViewSet(viewsets.ViewSet):
         )
 
     @extend_schema(
-        summary="Inicio de sesión",
+        summary="User Login",
         description=(
-            "Permite a un usuario iniciar sesión y obtener un token de "
-            "autenticación."
+            "Allows a user to log in and obtain an authentication token."
         ),
         request=LoginSerializer,
         responses={
             200: UserCustomSerializer,
-            400: "Credenciales inválidas",
+            400: OpenApiResponse(
+                description="Error in the submitted data"
+            ),
         },
     )
     @action(detail=False, methods=["post"])

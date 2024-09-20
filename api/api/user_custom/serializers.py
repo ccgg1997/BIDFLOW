@@ -7,6 +7,9 @@ from api.user_custom.repository.user_custom_repository import (
 
 from .models import UserCustom
 
+INVESTOR = "investor"
+OPERATOR = "operator"
+
 
 class UserCustomSerializer(serializers.ModelSerializer):
     class Meta:
@@ -20,14 +23,14 @@ class UserCustomSerializer(serializers.ModelSerializer):
         rol = validated_data.get("rol")
 
         try:
-            if rol == "inversor":
+            if rol == INVESTOR:
                 return UserCustomFactory.create_inversor(
                     validated_data["username"],
                     validated_data["dni"],
                     validated_data["email"],
                     validated_data["password"],
                 )
-            elif rol == "operador":
+            elif rol == OPERATOR:
                 return UserCustomFactory.create_operador(
                     validated_data["username"],
                     validated_data["dni"],
@@ -36,7 +39,7 @@ class UserCustomSerializer(serializers.ModelSerializer):
                 )
             else:
                 raise ValueError(
-                    "Invalid rol. Options: inversor, operador"
+                    "Invalid rol. Options: investor, operator"
                 )
         except Exception as e:
             raise serializers.ValidationError({"error": str(e)})
