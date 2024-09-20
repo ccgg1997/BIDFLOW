@@ -25,11 +25,15 @@ from rest_framework.routers import DefaultRouter
 
 from api.operation import views as operation_views
 from api.user_custom import views as user_views
+from api.auction import views as auction_views
 
 router = DefaultRouter()
 router.register(r"user", user_views.UserCustomViewSet, basename="User")
 router.register(
     r"operation", operation_views.OperationViewSet, basename="Operation"
+)
+router.register(
+    r"auction", auction_views.AuctionViewSet, basename="Auction"
 )
 
 urlpatterns = [
