@@ -42,7 +42,7 @@ BIDFLOW utiliza Django Rest Framework para proporcionar una API básica que faci
 
    Coverage
    ```
-   docker compose up --force-recreate tests
+   docker compose up --force-recreate tests_cov
 
    ```
 
