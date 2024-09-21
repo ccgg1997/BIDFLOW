@@ -62,6 +62,25 @@ services:
       - db
     working_dir: /app/api
     restart: 'no'
+  
+  inserter:
+    user: root
+    build: ./z-cron-old-operations
+    container_name: cron-change-status
+    restart: always
+    depends_on:
+      - web
+    privileged: true
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: mi_basededatos
+      DB_USER: usuario
+      DB_PASSWORD: contrasenia
+    cap_add:
+        - SYS_ADMIN
+    networks:
+      - app-network
 
 networks:
   app-network:

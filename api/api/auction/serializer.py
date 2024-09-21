@@ -6,7 +6,7 @@ from api.operation.models import Operation
 from .repository.auction_repository import AuctionRepository
 
 
-class OperationSerializer(serializers.ModelSerializer):
+class Auc_OperationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Operation
         fields = "__all__"
@@ -76,7 +76,7 @@ class OffertSerializerCreate(serializers.ModelSerializer):
 
 
 class AuctionDetailSerializer(serializers.ModelSerializer):
-    operation = OperationSerializer(read_only=True)
+    operation = Auc_OperationSerializer(read_only=True)
 
     offers = OffertSerializer(many=True, read_only=True)
 
