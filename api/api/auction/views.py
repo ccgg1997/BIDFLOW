@@ -1,6 +1,7 @@
 from django.http import Http404
 from drf_spectacular.utils import extend_schema
 from rest_framework import status, viewsets
+from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
@@ -36,7 +37,7 @@ class AuctionViewSet(viewsets.ViewSet):
         except Http404:
             return Response(
                 {
-                    "error": "Auction not found for the specified operation1."
+                    "error": "Auction not found for the specified operation."
                 },
                 status=status.HTTP_404_NOT_FOUND,
             )
@@ -73,6 +74,20 @@ class AuctionViewSet(viewsets.ViewSet):
             return self.error_response("Can't create an offert.")
 
         return self.success_response(created_offert)
+
+    @action(detail=False, methods=["get"])
+    def ask_mistral(self, request):
+        """analize the higest 10 operations active. Analize the amount, the
+        anual rate and the amount of operations of by user. it return
+        the 3 best operation to the user
+
+        Returns:
+            Recommend 3 operations for the user (str)
+        """
+        return Response(
+            {AuctionRepository.ask_mistral()},
+            status=status.HTTP_200_OK,
+        )
 
     # Aux methods
     def success_response(self, offert):
