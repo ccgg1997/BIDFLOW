@@ -15,10 +15,10 @@ class Operation(models.Model):
     amount = models.DecimalField(
         max_digits=20,
         decimal_places=2,
-        default=0.01,
+        default=1,
         validators=[
             MinValueValidator(
-                0.01, message="El monto debe ser mayor que cero."
+                1, message="El monto debe ser mayor que cero."
             )
         ],
     )
