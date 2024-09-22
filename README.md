@@ -66,7 +66,7 @@ Para utilizar la API, puedes hacer peticiones HTTP a los diferentes endpoints. A
 
 2. Crear una nueva Operacion:
    ```
-   POST http://localhost:9999/api/operation/
+   POST http://localhost:9999/api/auction/
    Content-Type: application/json
 
    {
