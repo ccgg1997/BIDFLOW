@@ -1,14 +1,8 @@
+from django.core.exceptions import ValidationError
 from rest_framework import serializers
 
-from api.user_custom.factory.user_factory import UserCustomFactory
-from api.user_custom.repository.user_custom_repository import (
-    UserCustomRepository,
-)
-
 from .models import UserCustom
-
-INVESTOR = "investor"
-OPERATOR = "operator"
+from .service import UserCustomService
 
 
 class UserCustomSerializer(serializers.ModelSerializer):
@@ -20,45 +14,13 @@ class UserCustomSerializer(serializers.ModelSerializer):
         }
 
     def create(self, validated_data):
-        rol = validated_data.get("rol")
-
+        """
+        Llamar al servicio para crear un usuario basado en los datos validados.
+        """
         try:
-            if rol == INVESTOR:
-                return UserCustomFactory.create_inversor(
-                    validated_data["username"],
-                    validated_data["dni"],
-                    validated_data["email"],
-                    validated_data["password"],
-                )
-            elif rol == OPERATOR:
-                return UserCustomFactory.create_operador(
-                    validated_data["username"],
-                    validated_data["dni"],
-                    validated_data["email"],
-                    validated_data["password"],
-                )
-            else:
-                raise ValueError(
-                    "Invalid rol. Options: investor, operator"
-                )
-        except Exception as e:
+            return UserCustomService.create_user(validated_data)
+        except ValidationError as e:
             raise serializers.ValidationError({"error": str(e)})
-
-    @staticmethod
-    def user_auth(username, password):
-        try:
-            user = UserCustomRepository().get_by_username(
-                username=username
-            )
-            if user is not None and user.check_password(password):
-                return user
-            return None
-        except UserCustom.DoesNotExist:
-            return None
-
-    @staticmethod
-    def get_all():
-        return UserCustomRepository().get_all()
 
 
 class LoginSerializer(serializers.Serializer):

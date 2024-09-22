@@ -6,6 +6,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
 from .serializers import LoginSerializer, UserCustomSerializer
+from .service import UserCustomService
 
 
 class UserCustomViewSet(viewsets.ViewSet):
@@ -15,7 +16,7 @@ class UserCustomViewSet(viewsets.ViewSet):
         return [IsAuthenticated()]
 
     @extend_schema(
-        summary="Register a new user",
+        summary="Create new user. IMPORTANT ROLE FIELD (INVESTOR OR OPERATOR)",
         request=UserCustomSerializer,
         responses={
             201: UserCustomSerializer,
@@ -25,7 +26,9 @@ class UserCustomViewSet(viewsets.ViewSet):
     def create(self, request):
         serializer = UserCustomSerializer(data=request.data)
         if serializer.is_valid():
-            user = serializer.save()
+            user = UserCustomService.create_user(
+                serializer.validated_data
+            )
             token = Token.objects.create(user=user)
 
             return Response(
@@ -61,7 +64,7 @@ class UserCustomViewSet(viewsets.ViewSet):
         username = serializer.validated_data.get("username")
         password = serializer.validated_data.get("password")
 
-        user = UserCustomSerializer.user_auth(username, password)
+        user = UserCustomService.authenticate_user(username, password)
         if user is None:
             return Response(
                 {"error": "Invalid credentials"},

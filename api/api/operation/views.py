@@ -1,4 +1,9 @@
-from drf_spectacular.utils import extend_schema
+from django.core.exceptions import ValidationError
+from drf_spectacular.utils import (
+    OpenApiParameter,
+    OpenApiTypes,
+    extend_schema,
+)
 from rest_framework import status, viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -8,6 +13,7 @@ from .serializer import (
     OperationSerializerInfo,
     OperationSerializerListInfo,
 )
+from .service import OperationService
 
 
 class OperationViewSet(viewsets.ViewSet):
@@ -19,17 +25,20 @@ class OperationViewSet(viewsets.ViewSet):
         responses=OperationSerializerListInfo(many=True),
     )
     def list(self, request):
+        operations = OperationService().fetch_active_operations()
+        if operations is None:
+            return Response(
+                {"detail": "There ara problems with fetch operations."},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
 
-        operations = (
-            OperationSerializerListInfo.fetch_active_operation()
-        )
         if not operations:
             return Response(
                 {"detail": "There are no active operations available."},
                 status=status.HTTP_200_OK,
             )
 
-        serializer = OperationSerializer(operations, many=True)
+        serializer = OperationSerializerListInfo(operations, many=True)
         return Response(serializer.data)
 
     @extend_schema(
@@ -37,8 +46,7 @@ class OperationViewSet(viewsets.ViewSet):
         responses=OperationSerializerInfo(many=True),
     )
     def retrieve(self, request, pk):
-
-        operation = OperationSerializerInfo.fetch_operation_id(pk)
+        operation = OperationService.fetch_operation_by_id(pk)
         if operation is None:
             return Response(
                 {"detail": "There are no an operation available."},
@@ -62,18 +70,42 @@ class OperationViewSet(viewsets.ViewSet):
         },
     )
     def create(self, request):
-        request.data["user"] = request.user.id
+        error_response = self.validate_user_role(request.user)
+        if error_response:
+            return error_response
+
+        return self.create_operation(request)
+
+    def validate_user_role(self, user):
+        """
+        Verify that the user has the role of operator.
+        If the user has a different role, return a response
+        with a 403 status code
+        """
+        try:
+            OperationService.validate_user(user.rol)
+        except ValidationError as e:
+            return Response(
+                {"error": str(e)},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+        return None
+
+    def create_operation(self, request):
+        """
+        Validate the data sent in the request and create a new operation.
+        """
         serializer = OperationSerializer(
-            data=request.data, context={"request": request}
+            data=request.data, context={"user": request.user}
         )
         if serializer.is_valid():
             new_operation = serializer.save()
             operation_data = OperationSerializer(new_operation).data
-
             return Response(
                 operation_data,
                 status=status.HTTP_201_CREATED,
             )
         return Response(
-            serializer.errors, status=status.HTTP_400_BAD_REQUEST
+            serializer.errors,
+            status=status.HTTP_400_BAD_REQUEST,
         )
