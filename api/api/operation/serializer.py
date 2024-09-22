@@ -69,6 +69,32 @@ class OperationSerializer(serializers.ModelSerializer):
                 "Can't create an operation." + str(e)
             )
 
+
+class OperationSerializerListInfo(serializers.ModelSerializer):
+    class Meta:
+        model = Operation
+        fields = ["id", "amount", "end_date"]
+
+    def fetch_active_operation():
+        return OperationRepository().fetch_open_operations()
+
+    def fetch_operation_id(id):
+        return OperationRepository().fetch_operation_by_id(id)
+
+
+class OperationSerializerInfo(serializers.ModelSerializer):
+    class Meta:
+        model = Operation
+        fields = [
+            "id",
+            "amount",
+            "topic",
+            "description",
+            "anual_rate",
+            "end_date",
+            "status",
+        ]
+
     def fetch_active_operation():
         return OperationRepository().fetch_open_operations()
 

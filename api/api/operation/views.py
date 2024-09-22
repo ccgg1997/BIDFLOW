@@ -3,7 +3,11 @@ from rest_framework import status, viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from .serializer import OperationSerializer
+from .serializer import (
+    OperationSerializer,
+    OperationSerializerInfo,
+    OperationSerializerListInfo,
+)
 
 
 class OperationViewSet(viewsets.ViewSet):
@@ -12,11 +16,13 @@ class OperationViewSet(viewsets.ViewSet):
 
     @extend_schema(
         summary=("Displays all active operations "),
-        responses=OperationSerializer(many=True),
+        responses=OperationSerializerListInfo(many=True),
     )
     def list(self, request):
 
-        operations = OperationSerializer.fetch_active_operation()
+        operations = (
+            OperationSerializerListInfo.fetch_active_operation()
+        )
         if not operations:
             return Response(
                 {"detail": "There are no active operations available."},
@@ -28,18 +34,18 @@ class OperationViewSet(viewsets.ViewSet):
 
     @extend_schema(
         summary=("Displays one operation by id"),
-        responses=OperationSerializer(many=True),
+        responses=OperationSerializerInfo(many=True),
     )
     def retrieve(self, request, pk):
 
-        operation = OperationSerializer.fetch_operation_id(pk)
+        operation = OperationSerializerInfo.fetch_operation_id(pk)
         if operation is None:
             return Response(
                 {"detail": "There are no an operation available."},
                 status=status.HTTP_200_OK,
             )
 
-        serializer = OperationSerializer(operation)
+        serializer = OperationSerializerInfo(operation)
         return Response(serializer.data)
 
     @extend_schema(
